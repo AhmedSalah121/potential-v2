@@ -1,6 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
 
 interface AuthInput {
   username: string;
@@ -8,13 +14,13 @@ interface AuthInput {
 }
 
 interface SignInData {
-  userId: number;
+  userId: string;
   username: string;
 }
 
-interface AuthResult {
+export interface AuthResult {
   accessToken: string;
-  userId: number;
+  userId: string;
   username: string;
 }
 
@@ -40,7 +46,7 @@ export class AuthService {
   ) {}
 
   async authenticate(input: AuthInput): Promise<AuthResult> {
-    const user = this.validateUser(input);
+    const user = await this.validateUser(input);
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -48,10 +54,10 @@ export class AuthService {
     return this.signIn(user);
   }
 
-  validateUser(authInput: AuthInput): SignInData | null {
-    const user = this.usersService.findUserByName(authInput.username);
-    if (user && user.password === authInput.password) {
-      return { userId: user.userId, username: authInput.username };
+  async validateUser(authInput: AuthInput): Promise<SignInData | null> {
+    const user = await this.usersService.findUserByName(authInput.username);
+    if (user && (await bcrypt.compare(authInput.password, user.password))) {
+      return { userId: user.id, username: authInput.username };
     }
 
     return null;
@@ -70,5 +76,24 @@ export class AuthService {
       userId: user.userId,
       username: user.username,
     };
+  }
+
+  async register(createUserDto: CreateUserDto): Promise<AuthResult> {
+    const existingUser = await this.usersService.findUserByName(
+      createUserDto.username,
+    );
+    if (existingUser) {
+      throw new BadRequestException('User already exists');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
+
+    const newUser = await this.usersService.createUser({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+
+    return this.signIn({ userId: newUser.id, username: newUser.username });
   }
 }
