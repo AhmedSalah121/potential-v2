@@ -24,7 +24,8 @@
     "prisma:reset": "prisma migrate reset",
     "prisma:push": "prisma db push",
     "dc-up": "docker compose up -d",
-    "dc-down": "docker compose down --remove-orphans"
+    "dc-down": "docker compose down --remove-orphans",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
