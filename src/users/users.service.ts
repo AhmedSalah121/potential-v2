@@ -1,27 +1,21 @@
 import { Injectable } from '@nestjs/common';
-
-export interface User {
-  userId: number;
-  username: string;
-  password: string;
-}
-
-const mockUsers: User[] = [
-  {
-    userId: 1,
-    username: 'Mocked1',
-    password: 'Mockedpassword',
-  },
-  {
-    userId: 2,
-    username: 'Mocked2',
-    password: 'Mockedpassword',
-  },
-];
+import { CreateUserDto } from './dto/create-user.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-  findUserByName(username: string): User | undefined {
-    return mockUsers.find((user) => user.username === username);
+  constructor(private prisma: PrismaService) {}
+
+  async findUserByName(username: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: { username },
+    });
+  }
+
+  async createUser(data: CreateUserDto): Promise<User> {
+    return this.prisma.user.create({
+      data,
+    });
   }
 }
