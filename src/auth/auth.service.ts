@@ -4,9 +4,9 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import {PrismaService} from "../prisma/prisma.service";
 
 interface AuthInput {
   username: string;
@@ -24,26 +24,24 @@ export interface AuthResult {
   username: string;
 }
 
-export class AuthenticationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'AuthenticationError';
-  }
-}
-
-export class ValidationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ValidationError';
-  }
-}
-
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+      private prisma: PrismaService,
     private jwtService: JwtService,
   ) {}
+
+    async findUserByName(username: string) {
+        return this.prisma.user.findUnique({
+            where: { username },
+        });
+    }
+
+    async createUser(data: CreateUserDto) {
+        return this.prisma.user.create({
+            data,
+        });
+    }
 
   async authenticate(input: AuthInput): Promise<AuthResult> {
     const user = await this.validateUser(input);
@@ -55,7 +53,7 @@ export class AuthService {
   }
 
   async validateUser(authInput: AuthInput): Promise<SignInData | null> {
-    const user = await this.usersService.findUserByName(authInput.username);
+    const user = await this.findUserByName(authInput.username);
     if (user && (await bcrypt.compare(authInput.password, user.password))) {
       return { userId: user.id, username: authInput.username };
     }
@@ -79,7 +77,7 @@ export class AuthService {
   }
 
   async register(createUserDto: CreateUserDto): Promise<AuthResult> {
-    const existingUser = await this.usersService.findUserByName(
+    const existingUser = await this.findUserByName(
       createUserDto.username,
     );
     if (existingUser) {
@@ -89,7 +87,7 @@ export class AuthService {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
 
-    const newUser = await this.usersService.createUser({
+    const newUser = await this.createUser({
       ...createUserDto,
       password: hashedPassword,
     });
