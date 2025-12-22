@@ -11,6 +11,14 @@ async function bootstrap() {
         new ExpressAdapter(server),
     );
 
+    // Enable CORS
+    app.enableCors({
+        origin: true, // Allow all origins in development, or specify your frontend URL
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    });
+
     await app.init();
 }
 
