@@ -16,12 +16,14 @@ interface AuthInput {
 interface SignInData {
   userId: string;
   username: string;
+  role: string;
 }
 
 export interface AuthResult {
   accessToken: string;
   userId: string;
   username: string;
+  role: string;
 }
 
 @Injectable()
@@ -55,7 +57,7 @@ export class AuthService {
   async validateUser(authInput: AuthInput): Promise<SignInData | null> {
     const user = await this.findUserByName(authInput.username);
     if (user && (await bcrypt.compare(authInput.password, user.password))) {
-      return { userId: user.id, username: authInput.username };
+      return { userId: user.id, username: authInput.username, role: user.role };
     }
 
     return null;
@@ -73,6 +75,7 @@ export class AuthService {
       accessToken: token,
       userId: user.userId,
       username: user.username,
+        role: user.role
     };
   }
 
@@ -92,6 +95,6 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    return this.signIn({ userId: newUser.id, username: newUser.username });
+    return this.signIn({ userId: newUser.id, username: newUser.username, role: newUser.role });
   }
 }
