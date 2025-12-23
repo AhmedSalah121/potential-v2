@@ -6,7 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import {PrismaService} from "../prisma/prisma.service";
+import { PrismaService } from '../prisma/prisma.service';
 
 interface AuthInput {
   username: string;
@@ -29,21 +29,21 @@ export interface AuthResult {
 @Injectable()
 export class AuthService {
   constructor(
-      private prisma: PrismaService,
+    private prisma: PrismaService,
     private jwtService: JwtService,
   ) {}
 
-    async findUserByName(username: string) {
-        return this.prisma.user.findUnique({
-            where: { username },
-        });
-    }
+  async findUserByName(username: string) {
+    return this.prisma.user.findUnique({
+      where: { username },
+    });
+  }
 
-    async createUser(data: CreateUserDto) {
-        return this.prisma.user.create({
-            data,
-        });
-    }
+  async createUser(data: CreateUserDto) {
+    return this.prisma.user.create({
+      data,
+    });
+  }
 
   async authenticate(input: AuthInput): Promise<AuthResult> {
     const user = await this.validateUser(input);
@@ -75,14 +75,12 @@ export class AuthService {
       accessToken: token,
       userId: user.userId,
       username: user.username,
-        role: user.role
+      role: user.role,
     };
   }
 
   async register(createUserDto: CreateUserDto): Promise<AuthResult> {
-    const existingUser = await this.findUserByName(
-      createUserDto.username,
-    );
+    const existingUser = await this.findUserByName(createUserDto.username);
     if (existingUser) {
       throw new BadRequestException('User already exists');
     }
@@ -95,6 +93,10 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    return this.signIn({ userId: newUser.id, username: newUser.username, role: newUser.role });
+    return this.signIn({
+      userId: newUser.id,
+      username: newUser.username,
+      role: newUser.role,
+    });
   }
 }
