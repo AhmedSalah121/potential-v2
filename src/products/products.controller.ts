@@ -1,12 +1,14 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
@@ -43,7 +45,20 @@ export class ProductsController {
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(id);
+  remove(@Param('id') id: string, @Req() req: any) {
+    return this.productsService.remove(id, req.user);
+  }
+
+  @Get('search/:name')
+  search(
+    @Param('name') name: string,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.productsService.search(
+      name,
+      limit ? +limit : 10,
+      offset ? +offset : 0,
+    );
   }
 }

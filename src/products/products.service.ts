@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -33,9 +37,57 @@ export class ProductsService {
     });
   }
 
-  remove(id: string) {
-    return this.prismaService.product.delete({
+  async remove(id: string, user: any) {
+    const product = await this.prismaService.product.findUnique({
       where: { id },
     });
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    if (product.userId === user.userId) {
+      return this.prismaService.product.delete({
+        where: { id },
+      });
+    }
+
+    throw new ForbiddenException(
+      'You are not authorized to delete this product',
+    );
+  }
+
+  async search(name: string, limit = 10, offset = 0) {
+    const [products, total] = await Promise.all([
+      this.prismaService.product.findMany({
+        where: {
+          name: {
+            contains: name,
+            mode: 'insensitive',
+          },
+        },
+        take: limit,
+        skip: offset,
+      }),
+      this.prismaService.product.count({
+        where: {
+          name: {
+            contains: name,
+            mode: 'insensitive',
+          },
+        },
+      }),
+    ]);
+
+    return {
+      data: products,
+      meta: {
+        total,
+        limit,
+        offset,
+        page: Math.floor(offset / limit) + 1,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 }
