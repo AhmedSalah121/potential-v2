@@ -49,6 +49,7 @@ model User {
   orders    Order[]
   addresses Address[]
   reviews   Review[]
+  products  Product[]
 }
 
 model Category {
@@ -77,12 +78,16 @@ model Product {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   cartItems  CartItem[]
   orderItems OrderItem[]
   reviews    Review[]
 
   @@index([categoryId])
   @@index([sku])
+  @@index([userId])
 }
 
 model Cart {
