@@ -37,7 +37,7 @@ export class ProductsService {
     });
   }
 
-  async remove(id: string, user: any) {
+  async remove(id: string, userId: any) {
     const product = await this.prismaService.product.findUnique({
       where: { id },
     });
@@ -46,9 +46,10 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
 
-    if (product.userId === user.userId) {
-      return this.prismaService.product.delete({
+    if (product.userId === userId) {
+      return this.prismaService.product.update({
         where: { id },
+        data: { isActive: false },
       });
     }
 

@@ -10,6 +10,9 @@ export class CreateProductDto {
   @IsString()
   name: string;
 
+  @IsString()
+  userId: string;
+
   @IsOptional()
   @IsString()
   description?: string;

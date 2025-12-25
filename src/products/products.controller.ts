@@ -46,7 +46,7 @@ export class ProductsController {
   @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: any) {
-    return this.productsService.remove(id, req.user);
+    return this.productsService.remove(id, req.userId);
   }
 
   @Get('search/:name')
