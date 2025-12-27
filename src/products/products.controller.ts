@@ -15,16 +15,24 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
+import { Role } from '../common/enums/role.enum';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 @ApiTags('products')
 @Controller('products')
+@UseGuards(AuthGuard, RolesGuard)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN, Role.SELLER)
   @Post('create')
-  create(@Req() req: any, @Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(req.user.userId, createProductDto);
+  create(
+    @CurrentUser('userId') userId: string,
+    @Body() createProductDto: CreateProductDto,
+  ) {
+    return this.productsService.create(userId, createProductDto);
   }
 
   @Get('find')
@@ -37,13 +45,11 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
-  @UseGuards(AuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.update(id, updateProductDto);
   }
 
-  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: any) {
     return this.productsService.remove(id, req.userId);

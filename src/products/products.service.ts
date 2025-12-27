@@ -12,19 +12,19 @@ export class ProductsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   create(userId: string, dto: CreateProductDto) {
-      const { categoryId, ...productData } = dto;
+    const { categoryId, ...productData } = dto;
 
-      return this.prismaService.product.create({
-          data: {
-              ...productData,
-              user: {
-                  connect: { id: userId },
-              },
-              category: {
-                  connect: { id: categoryId },
-              },
-          },
-      });
+    return this.prismaService.product.create({
+      data: {
+        ...productData,
+        user: {
+          connect: { id: userId },
+        },
+        category: {
+          connect: { id: categoryId },
+        },
+      },
+    });
   }
 
   findAll(limit = 10, offset = 0) {
