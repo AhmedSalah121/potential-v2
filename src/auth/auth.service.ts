@@ -20,10 +20,10 @@ interface SignInData {
 }
 
 export interface AuthResult {
-  accessToken: string;
-  userId: string;
-  username: string;
-  role: string;
+  token: string;
+  // userId: string;
+  // username: string;
+  // role: string;
 }
 
 @Injectable()
@@ -67,15 +67,16 @@ export class AuthService {
     const payload = {
       sub: user.userId,
       username: user.username,
+      role: user.role,
     };
 
     const token = await this.jwtService.signAsync(payload);
 
     return {
-      accessToken: token,
-      userId: user.userId,
-      username: user.username,
-      role: user.role,
+      token: token,
+      // userId: user.userId,
+      // username: user.username,
+      // role: user.role,
     };
   }
 
