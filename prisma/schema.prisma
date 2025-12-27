@@ -92,32 +92,32 @@ model Product {
 
 model Cart {
   id        String   @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    CartStatus  @default(ACTIVE)
+  items CartItem[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  items CartItem[]
 
   @@index([userId])
 }
 
 model CartItem {
   id        String   @id @default(uuid())
-  quantity  Int      @default(1)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   cartId String
-  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
-
   productId String
+  quantity  Int      @default(1)
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, productId])
   @@index([cartId])
   @@index([productId])
+}
+
+enum CartStatus {
+  ACTIVE
+  CHECKED_OUT
 }
 
 model Address {
