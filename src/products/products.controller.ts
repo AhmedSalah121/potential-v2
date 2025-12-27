@@ -23,8 +23,8 @@ export class ProductsController {
 
   @UseGuards(AuthGuard)
   @Post('create')
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  create(@Req() req: any, @Body() createProductDto: CreateProductDto) {
+    return this.productsService.create(req.user.userId, createProductDto);
   }
 
   @Get('find')
