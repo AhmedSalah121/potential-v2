@@ -1,29 +1,539 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Store API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+An e-commerce REST API built with NestJS, Prisma, and Postgresql.
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a comprehensive e-commerce backend application with authentication, product management, cart functionality, orders, reviews, and categories.
+
+## Project setup
+
+```bash
+$ npm install
+```
+
+## API Documentation
+
+The API is documented using Swagger will be available at the following URL, once it is ready:
+- **Production**: https://potential-v2.vercel.app/api/docs
+
+## API Endpoints
+
+### Base URLs
+- **Production**: https://potential-v2.vercel.app/
+
+### Authentication Endpoints
+
+#### 1. Register User
+- **URL**: `POST /auth/register`
+- **Description**: Create a new user account
+- **Authentication**: None required
+- **Request Body**:
+```json
+{
+  "username": "ahmed",
+  "firstName": "Ahmed",
+  "lastName": "Salah",
+  "phone": "+201234567890",
+  "password": "password",
+  "email": "ahmed@gmail.com"
+}
+```
+- **Response** (201):
+```json
+{
+  "id": "uuid",
+  "username": "ahmed",
+  "email": "ahmed@gmail.com",
+  "firstName": "Ahmed",
+  "lastName": "Salah",
+  "phone": "+201234567890",
+  "role": "CUSTOMER",
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+#### 2. Login
+- **URL**: `POST /auth/login`
+- **Description**: Authenticate user and receive JWT token
+- **Authentication**: None required
+- **Request Body**:
+```json
+{
+  "username": "ahmed",
+  "password": "password"
+}
+```
+- **Response** (200):
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "uuid",
+    "username": "ahmed",
+    "email": "ahmed@gmail.com",
+    "role": "CUSTOMER"
+  }
+}
+```
+
+#### 3. Get Current User
+- **URL**: `GET /auth/me`
+- **Description**: Get authenticated user information
+- **Authentication**: Required (Bearer Token)
+- **Headers**:
+```
+Authorization: Bearer <your-token>
+```
+- **Response** (200):
+```json
+{
+  "userId": "uuid",
+  "username": "ahmed",
+  "email": "ahmed@gmail.com",
+  "role": "CUSTOMER"
+}
+```
+
+---
+
+### Product Endpoints
+
+**Note**: All product endpoints require authentication (Bearer Token)
+
+#### 1. Create Product
+- **URL**: `POST /products/create`
+- **Description**: Create a new product (Admin/Seller only)
+- **Authentication**: Required (Bearer Token) - Roles: ADMIN, SELLER
+- **Headers**:
+```
+Authorization: Bearer <your-token>
+```
+- **Request Body**:
+```json
+{
+  "name": "iPhone 15 Pro",
+  "description": "Latest Apple smartphone with A17 Pro chip",
+  "price": 999.99,
+  "stock": 50,
+  "sku": "IPHONE15PRO-256-BLK",
+  "imageUrl": "https://example.com/images/iphone15.jpg",
+  "isActive": true,
+  "categoryId": "category-uuid"
+}
+```
+- **Response** (201):
+```json
+{
+  "id": "product-uuid",
+  "name": "iPhone 15 Pro",
+  "description": "Latest Apple smartphone with A17 Pro chip",
+  "price": "999.99",
+  "stock": 50,
+  "sku": "IPHONE15PRO-256-BLK",
+  "imageUrl": "https://example.com/images/iphone15.jpg",
+  "isActive": true,
+  "categoryId": "category-uuid",
+  "userId": "user-uuid",
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+#### 2. Get All Products
+- **URL**: `GET /products/find`
+- **Description**: Retrieve all products
+- **Authentication**: Required (Bearer Token)
+- **Response** (200):
+```json
+[
+  {
+    "id": "product-uuid",
+    "name": "iPhone 15 Pro",
+    "description": "Latest Apple smartphone",
+    "price": "999.99",
+    "stock": 50,
+    "sku": "IPHONE15PRO-256-BLK",
+    "imageUrl": "https://example.com/images/iphone15.jpg",
+    "isActive": true,
+    "categoryId": "category-uuid",
+    "userId": "user-uuid",
+    "createdAt": "2025-12-28T00:00:00.000Z",
+    "updatedAt": "2025-12-28T00:00:00.000Z"
+  }
+]
+```
+
+#### 3. Get Product by ID
+- **URL**: `GET /products/:id`
+- **Description**: Retrieve a single product by ID
+- **Authentication**: Required (Bearer Token)
+- **URL Parameters**: `id` (string) - Product UUID
+- **Example**: `GET /products/123e4567-e89b-12d3-a456-426614174000`
+- **Response** (200):
+```json
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "name": "iPhone 15 Pro",
+  "description": "Latest Apple smartphone",
+  "price": "999.99",
+  "stock": 50,
+  "sku": "IPHONE15PRO-256-BLK",
+  "imageUrl": "https://example.com/images/iphone15.jpg",
+  "isActive": true,
+  "categoryId": "category-uuid",
+  "userId": "user-uuid",
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+#### 4. Search Products
+- **URL**: `GET /products/search/:name`
+- **Description**: Search products by name with pagination
+- **Authentication**: Required (Bearer Token)
+- **URL Parameters**: `name` (string) - Search term
+- **Query Parameters**: 
+  - `limit` (number, optional) - Number of results per page (default: 10)
+  - `offset` (number, optional) - Number of results to skip (default: 0)
+- **Example**: `GET /products/search/iphone?limit=10&offset=0`
+- **Response** (200):
+```json
+[
+  {
+    "id": "product-uuid",
+    "name": "iPhone 15 Pro",
+    "description": "Latest Apple smartphone",
+    "price": "999.99",
+    "stock": 50,
+    "sku": "IPHONE15PRO-256-BLK",
+    "imageUrl": "https://example.com/images/iphone15.jpg",
+    "isActive": true,
+    "categoryId": "category-uuid",
+    "userId": "user-uuid",
+    "createdAt": "2025-12-28T00:00:00.000Z",
+    "updatedAt": "2025-12-28T00:00:00.000Z"
+  }
+]
+```
+
+#### 5. Update Product
+- **URL**: `PATCH /products/:id`
+- **Description**: Update a product by ID
+- **Authentication**: Required (Bearer Token)
+- **URL Parameters**: `id` (string) - Product UUID
+- **Request Body** (all fields optional):
+```json
+{
+  "name": "iPhone 15 Pro Max",
+  "price": 1099.99,
+  "stock": 30,
+  "description": "Updated description",
+  "imageUrl": "https://example.com/images/new-image.jpg",
+  "isActive": false
+}
+```
+- **Response** (200):
+```json
+{
+  "id": "product-uuid",
+  "name": "iPhone 15 Pro Max",
+  "description": "Updated description",
+  "price": "1099.99",
+  "stock": 30,
+  "sku": "IPHONE15PRO-256-BLK",
+  "imageUrl": "https://example.com/images/new-image.jpg",
+  "isActive": false,
+  "categoryId": "category-uuid",
+  "userId": "user-uuid",
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+#### 6. Delete Product
+- **URL**: `DELETE /products/:id`
+- **Description**: Delete a product by ID
+- **Authentication**: Required (Bearer Token)
+- **URL Parameters**: `id` (string) - Product UUID
+- **Response** (200):
+```json
+{
+  "message": "Product deleted successfully"
+}
+```
+
+---
+
+### Cart Endpoints
+
+**Note**: All cart endpoints require authentication (Bearer Token)
+
+#### 1. Get Cart
+- **URL**: `GET /cart`
+- **Description**: Retrieve current user's cart with items
+- **Authentication**: Required (Bearer Token)
+- **Headers**:
+```
+Authorization: Bearer <your-token>
+```
+- **Response** (200):
+```json
+{
+  "id": "cart-uuid",
+  "userId": "user-uuid",
+  "status": "ACTIVE",
+  "items": [
+    {
+      "id": "cart-item-uuid",
+      "cartId": "cart-uuid",
+      "productId": "product-uuid",
+      "quantity": 2,
+      "product": {
+        "id": "product-uuid",
+        "name": "iPhone 15 Pro",
+        "price": "999.99",
+        "imageUrl": "https://example.com/images/iphone15.jpg"
+      }
+    }
+  ],
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+#### 2. Update Cart Item
+- **URL**: `PATCH /cart/update`
+- **Description**: Add or update product quantity in cart
+- **Authentication**: Required (Bearer Token)
+- **Request Body**:
+```json
+{
+  "productId": "product-uuid",
+  "qty": 3
+}
+```
+- **Response** (200):
+```json
+{
+  "id": "cart-uuid",
+  "userId": "user-uuid",
+  "status": "ACTIVE",
+  "items": [
+    {
+      "id": "cart-item-uuid",
+      "cartId": "cart-uuid",
+      "productId": "product-uuid",
+      "quantity": 3
+    }
+  ],
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+#### 3. Remove Cart Item
+- **URL**: `DELETE /cart/items/:productId`
+- **Description**: Remove a product from cart
+- **Authentication**: Required (Bearer Token)
+- **URL Parameters**: `productId` (string) - Product UUID
+- **Example**: `DELETE /cart/items/123e4567-e89b-12d3-a456-426614174000`
+- **Response** (200):
+```json
+{
+  "id": "cart-uuid",
+  "userId": "user-uuid",
+  "status": "ACTIVE",
+  "items": [],
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+---
+
+### Category Endpoints
+
+#### 1. Create Category
+- **URL**: `POST /categories`
+- **Description**: Create a new category
+- **Authentication**: None required
+- **Request Body**:
+```json
+{
+  "name": "Electronics",
+  "description": "Electronic devices and accessories",
+  "slug": "electronics"
+}
+```
+- **Response** (201):
+```json
+{
+  "id": "category-uuid",
+  "name": "Electronics",
+  "description": "Electronic devices and accessories",
+  "slug": "electronics",
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+#### 2. Get All Categories
+- **URL**: `GET /categories`
+- **Description**: Retrieve all categories
+- **Authentication**: None required
+- **Response** (200):
+```json
+[
+  {
+    "id": "category-uuid",
+    "name": "Electronics",
+    "description": "Electronic devices and accessories",
+    "slug": "electronics",
+    "createdAt": "2025-12-28T00:00:00.000Z",
+    "updatedAt": "2025-12-28T00:00:00.000Z"
+  }
+]
+```
+
+#### 3. Get Category by ID
+- **URL**: `GET /categories/:id`
+- **Description**: Retrieve a single category by ID
+- **Authentication**: None required
+- **URL Parameters**: `id` (number) - Category ID
+- **Example**: `GET /categories/1`
+- **Response** (200):
+```json
+{
+  "id": "category-uuid",
+  "name": "Electronics",
+  "description": "Electronic devices and accessories",
+  "slug": "electronics",
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+#### 4. Update Category
+- **URL**: `PATCH /categories/:id`
+- **Description**: Update a category by ID
+- **Authentication**: None required
+- **URL Parameters**: `id` (number) - Category ID
+- **Request Body** (all fields optional):
+```json
+{
+  "name": "Consumer Electronics",
+  "description": "Updated description"
+}
+```
+- **Response** (200):
+```json
+{
+  "id": "category-uuid",
+  "name": "Consumer Electronics",
+  "description": "Updated description",
+  "slug": "electronics",
+  "createdAt": "2025-12-28T00:00:00.000Z",
+  "updatedAt": "2025-12-28T00:00:00.000Z"
+}
+```
+
+#### 5. Delete Category
+- **URL**: `DELETE /categories/:id`
+- **Description**: Delete a category by ID
+- **Authentication**: None required
+- **URL Parameters**: `id` (number) - Category ID
+- **Response** (200):
+```json
+{
+  "message": "Category deleted successfully"
+}
+```
+
+---
+
+### Order Endpoints
+
+#### 1. Create Order
+- **URL**: `POST /orders`
+- **Description**: Create a new order
+- **Authentication**: None required
+- **Request Body**: To be implemented
+- **Response** (201): Order object
+
+#### 2. Get All Orders
+- **URL**: `GET /orders`
+- **Description**: Retrieve all orders
+- **Authentication**: None required
+- **Response** (200): Array of order objects
+
+#### 3. Get Order by ID
+- **URL**: `GET /orders/:id`
+- **Description**: Retrieve a single order by ID
+- **Authentication**: None required
+- **URL Parameters**: `id` (number) - Order ID
+- **Response** (200): Order object
+
+#### 4. Update Order
+- **URL**: `PATCH /orders/:id`
+- **Description**: Update an order by ID
+- **Authentication**: None required
+- **URL Parameters**: `id` (number) - Order ID
+- **Request Body**: To be implemented
+- **Response** (200): Updated order object
+
+#### 5. Delete Order
+- **URL**: `DELETE /orders/:id`
+- **Description**: Delete an order by ID
+- **Authentication**: None required
+- **URL Parameters**: `id` (number) - Order ID
+- **Response** (200): Deletion confirmation
+
+---
+
+### Review Endpoints
+
+#### 1. Create Review
+- **URL**: `POST /reviews`
+- **Description**: Create a new product review
+- **Authentication**: None required
+- **Request Body**: To be implemented
+- **Response** (201): Review object
+
+#### 2. Get All Reviews
+- **URL**: `GET /reviews`
+- **Description**: Retrieve all reviews
+- **Authentication**: None required
+- **Response** (200): Array of review objects
+
+#### 3. Get Review by ID
+- **URL**: `GET /reviews/:id`
+- **Description**: Retrieve a single review by ID
+- **Authentication**: None required
+- **URL Parameters**: `id` (number) - Review ID
+- **Response** (200): Review object
+
+#### 4. Update Review
+- **URL**: `PATCH /reviews/:id`
+- **Description**: Update a review by ID
+- **Authentication**: None required
+- **URL Parameters**: `id` (number) - Review ID
+- **Request Body**: To be implemented
+- **Response** (200): Updated review object
+
+#### 5. Delete Review
+- **URL**: `DELETE /reviews/:id`
+- **Description**: Delete a review by ID
+- **Authentication**: None required
+- **URL Parameters**: `id` (number) - Review ID
+- **Response** (200): Deletion confirmation
+
+### User Roles
+- **CUSTOMER**: Default role for registered users
+- **SELLER**: Can create and manage their products
+- **ADMIN**: Full access to all resources
+---
 
 ## Project setup
 
@@ -35,13 +545,7 @@ $ npm install
 
 ```bash
 # development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ npm run dev
 ```
 
 ## Run tests
@@ -57,42 +561,14 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Deployment
+## Database
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+This project uses PostgreSQL with Prisma ORM. Run migrations:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Generate Prisma Client
+$ npm run prisma:generate
+
+# Run migrations
+$ npx prisma migrate deploy
 ```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
