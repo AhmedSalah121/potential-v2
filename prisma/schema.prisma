@@ -142,7 +142,7 @@ model Address {
 
 model Order {
   id              String      @id @default(uuid())
-  orderNumber     String      @unique
+  orderNumber  Int                 @default(dbgenerated("nextval('order_number_seq')"))
   status          OrderStatus @default(PENDING)
   totalAmount     Decimal     @db.Decimal(10, 2)
   shippingAddress String
