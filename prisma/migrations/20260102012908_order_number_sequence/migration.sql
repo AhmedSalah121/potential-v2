@@ -5,7 +5,7 @@ INCREMENT 1;
 
 -- AlterTable
 ALTER TABLE "Order"
-ADD COLUMN     "orderNumber" SET DEFAULT nextval('order_number_seq');
+ALTER COLUMN     "orderNumber" SET DEFAULT nextval('order_number_seq');
 
 -- CreateIndex
 CREATE INDEX IF NOT EXISTS "Order_orderNumber_idx"
