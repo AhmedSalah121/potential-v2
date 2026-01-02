@@ -26,7 +26,7 @@ export class CartsController {
 
   @Patch('update')
   update(@Req() req: any, @Body() dto: UpdateCartDto) {
-    return this.cartsService.save(req.user.userId, dto.productId, dto.qty);
+    return this.cartsService.save(req.user.userId, dto.productId, dto.quantity);
   }
 
   @Delete('items/:productId')

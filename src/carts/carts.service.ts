@@ -30,8 +30,14 @@ export class CartsService {
         },
       });
     }
+      const total = cart.items.reduce((sum, item) => {
+          return sum + (Number(item.product.price) * item.quantity);
+      }, 0);
 
-    return cart;
+      return {
+          ...cart,
+          total,
+      };
   }
 
   // Adds an item to the user's cart. If the item already exists, it increments the quantity.
