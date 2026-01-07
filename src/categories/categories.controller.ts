@@ -35,9 +35,10 @@ export class CategoriesController {
     return this.categoriesService.findAll();
   }
 
+  @Roles(Role.ADMIN, Role.SELLER, Role.SELLER)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.categoriesService.findOne(+id);
+    return this.categoriesService.findOne(id);
   }
 
   @Patch(':id')
