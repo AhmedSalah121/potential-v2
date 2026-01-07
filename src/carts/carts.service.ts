@@ -30,9 +30,9 @@ export class CartsService {
         },
       });
     }
-      const total = cart.items.reduce((sum, item) => {
-          return sum + (Number(item.product.price) * item.quantity);
-      }, 0);
+    const total = cart.items.reduce((sum, item) => {
+      return sum + Number(item.product.price) * item.quantity;
+    }, 0);
 
       return {
           ...cart,

@@ -33,9 +33,6 @@ import { AuthGuard } from './guards/auth.guard';
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, AuthGuard],
   controllers: [AuthController, PassportAuthController],
-  exports: [
-    AuthGuard,
-    JwtModule,
-  ],
+  exports: [AuthGuard, JwtModule],
 })
 export class AuthModule {}

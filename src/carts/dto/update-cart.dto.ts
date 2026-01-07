@@ -1,4 +1,4 @@
 export class UpdateCartDto {
   productId: string;
-  qty: number;
+  quantity: number;
 }
