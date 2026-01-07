@@ -29,13 +29,13 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
-  @Roles(Role.ADMIN, Role.SELLER, Role.SELLER)
+  @Roles(Role.ADMIN, Role.SELLER, Role.CUSTOMER)
   @Get()
   findAll() {
     return this.categoriesService.findAll();
   }
 
-  @Roles(Role.ADMIN, Role.SELLER, Role.SELLER)
+  @Roles(Role.ADMIN, Role.SELLER, Role.CUSTOMER)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.categoriesService.findOne(id);
