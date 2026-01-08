@@ -42,15 +42,7 @@ The API is documented using Swagger will be available at the following URL, once
 - **Response** (201):
 ```json
 {
-  "id": "uuid",
-  "username": "ahmed",
-  "email": "ahmed@gmail.com",
-  "firstName": "Ahmed",
-  "lastName": "Salah",
-  "phone": "+201234567890",
-  "role": "CUSTOMER",
-  "createdAt": "2025-12-28T00:00:00.000Z",
-  "updatedAt": "2025-12-28T00:00:00.000Z"
+  "token": "jwt-token"
 }
 ```
 
@@ -68,13 +60,7 @@ The API is documented using Swagger will be available at the following URL, once
 - **Response** (200):
 ```json
 {
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "uuid",
-    "username": "ahmed",
-    "email": "ahmed@gmail.com",
-    "role": "CUSTOMER"
-  }
+  "token": "jwt-token"
 }
 ```
 
