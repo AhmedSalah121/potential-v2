@@ -5,13 +5,15 @@ import {
   Patch,
   Param,
   Delete,
-  Req,
   UseGuards,
+  Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CartsService } from './carts.service';
-import { UpdateCartDto } from './dto/update-cart.dto';
+import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import {AddCartItemDto} from "./dto/add-cart-item.dto";
 
 @ApiTags('cart')
 @UseGuards(AuthGuard)
@@ -20,17 +22,41 @@ export class CartsController {
   constructor(private readonly cartsService: CartsService) {}
 
   @Get()
-  fetch(@Req() req: any) {
-    return this.cartsService.fetch(req.user.userId);
+  fetch(@CurrentUser('userId') userId: string) {
+    return this.cartsService.fetch(userId);
   }
 
-  @Patch('update')
-  update(@Req() req: any, @Body() dto: UpdateCartDto) {
-    return this.cartsService.save(req.user.userId, dto.productId, dto.quantity);
+  @Post('items')
+  addItem(
+    @CurrentUser('userId') userId: string,
+    @Body() dto: AddCartItemDto,
+  ) {
+    return this.cartsService.addItem(userId, dto.productId, dto.qty);
+  }
+
+  @Patch('items/:productId')
+  updateItem(
+    @CurrentUser('userId') userId: string,
+    @Param('productId') productId: string,
+    @Body() dto: UpdateCartItemDto,
+  ) {
+    return this.cartsService.updateItemQuantity(
+      userId,
+      productId,
+      dto.qty,
+    );
   }
 
   @Delete('items/:productId')
-  deleteItem(@Req() req: any, @Param('productId') productId: string) {
-    return this.cartsService.save(req.user.userId, productId, 0);
+  removeItem(
+    @CurrentUser('userId') userId: string,
+    @Param('productId') productId: string,
+  ) {
+    return this.cartsService.remove(userId, productId);
+  }
+
+  @Delete()
+  clearCart(@CurrentUser('userId') userId: string) {
+    return this.cartsService.clearCart(userId);
   }
 }
