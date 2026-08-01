@@ -17,7 +17,7 @@ export class OrdersRepository {
     return this.prisma.order.create({
       data: {
         userId: data.userId,
-        shippingAddress: data.shippingAddress,
+        shippingAddressId: data.shippingAddress,
         totalAmount: data.totalAmount,
         items: {
           create: data.items,
