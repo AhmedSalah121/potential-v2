@@ -1,0 +1,181 @@
+POST http://localhost:3000/auth/login
+content-type: application/json
+
+{
+  "username": "Ahmed",
+  "password": "123456"
+}
+
+###
+GET http://localhost:3000/auth/me
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzOGEzN2JhNS04OTUwLTRjNjctOTllYi0yODc4ZDI4NmU5MGIiLCJ1c2VybmFtZSI6ImFobWVkIiwiaWF0IjoxNzY2ODA4NjU1LCJleHAiOjE3NjY4OTUwNTV9.0epQ4X_1mMRoSr4V4MFsYKsmiiHfxp5qJFOJ22GMrpM
+
+###
+POST http://localhost:3000/auth-v2/login
+content-type: application/json
+
+{
+  "username": "Ahmed",
+  "password": "123456"
+}
+
+###
+GET http://localhost:3000/auth-v2/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiQWhtZWQiLCJpYXQiOjE3NjM2OTMwMTUsImV4cCI6MTc2Mzc3OTQxNX0.tB-_58eesojxaRjdCF_re8JXpmI3Bcxt2M6j-e9yQSA
+
+###
+POST http://localhost:3000/auth/register
+content-type: application/json
+
+{
+  "username": "ahmed",
+  "firstName": "Ahmed",
+  "lastName": "Salah",
+  "phone": "0123456789",
+  "password": "123456",
+  "email": "ahmed@gmail.com"
+}
+
+###
+POST http://localhost:3000/auth/login
+content-type: application/json
+
+{
+  "username": "ahmed2",
+  "password": "123456"
+}
+
+###
+POST http://localhost:3000/products/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZWU0Y2IzMi01YjEwLTRlNDMtOWQwOS03ODFiNzRhODE5ZTciLCJ1c2VybmFtZSI6ImFobWVkMiIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2NjgxNDE0OCwiZXhwIjoxNzY2OTAwNTQ4fQ.Nbbiof48U89xDkEVtDT13MVrb0ChpqhWe5EjvoCosTM
+content-type: application/json
+
+{
+  "name": "IPhone 15",
+  "description": "Latest Apple iPhone",
+  "price": 1599.99,
+  "categoryId": "temp",
+  "stock": 50,
+  "imageUrl": "http://example.com/iphone15.jpg",
+  "sku": "IP15-009"
+}
+
+###
+GET http://localhost:3000/products/find
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNDg1ZDBkNy00YjlmLTRjZTYtYmYyZC1jNmY3NTZiMDcwY2MiLCJ1c2VybmFtZSI6IkFobWVkIiwiaWF0IjoxNzY2MTcyNzcxLCJleHAiOjE3NjYyNTkxNzF9.lwfMHIJlsZ7KXHErFEfXZlTbucLaXFirG4Uu-fXqYrk
+
+###
+GET http://localhost:3000/products/8fe5510f-b749-4bf6-a022-6eebab69ff29
+
+###
+PATCH http://localhost:3000/products/8fe5510f-b749-4bf6-a022-6eebab69ff29
+content-type: application/json
+
+{
+  "description": "Black IPhone 13 - 256GB",
+  "price": 1000.00
+}
+
+###
+DELETE http://localhost:3000/products/07515a94-e43c-48d7-89d5-ca0282d9ad5a
+
+###
+GET http://localhost:3000/products/search/iphone
+
+###
+POST http://localhost:3000/products/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NGNmYzJkYi0xZWFlLTRiMTAtOWI0MC0yZmJmZWJlNzRlMjQiLCJ1c2VybmFtZSI6ImFobWVkIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY3MzIyMjY0LCJleHAiOjE3Njc0MDg2NjR9.6vSntiJtBO4j-Yf0YYSdnxiDIhJM2TuAFyfvge88vvE
+content-type: application/json
+
+{
+  "name": "Samsung Galaxy S21",
+  "description": "Latest Samsung Galaxy",
+  "price": 899.99,
+  "categoryId": "cat-id",
+  "stock": 30,
+  "sku": "SGS21-001"
+}
+
+###
+POST https://potential-v2.vercel.app/auth/register
+content-type: application/json
+
+{
+  "username": "d",
+  "firstName": "Customer",
+  "lastName": "One",
+  "phone": "0123456789",
+  "password": "123456",
+  "email": "d@gmail.com"
+}
+
+###
+POST https://potential-v2.vercel.app/auth/login
+content-type: application/json
+
+{
+  "username": "customer",
+  "password": "123456"
+}
+
+###
+GET https://potential-v2.vercel.app/cart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGRlMGYzYi1hYTNiLTRmY2EtOTYyOC1hOTczOTY0MmZkZjMiLCJ1c2VybmFtZSI6ImN1c3RvbWVyIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzY3ODU4ODEyLCJleHAiOjE3Njc5NDUyMTJ9.pMHR1-jhv4U-HbUiyOO87acmh1Q1TW8VVN67t0n4VXo
+
+###
+DELETE https://potential-v2.vercel.app/cart/items/2c33f46d-c412-4e0a-9245-a74339473481
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGRlMGYzYi1hYTNiLTRmY2EtOTYyOC1hOTczOTY0MmZkZjMiLCJ1c2VybmFtZSI6ImN1c3RvbWVyIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzY3ODU4ODEyLCJleHAiOjE3Njc5NDUyMTJ9.pMHR1-jhv4U-HbUiyOO87acmh1Q1TW8VVN67t0n4VXo
+content-type: application/json
+
+{
+  "productId": "2c33f46d-c412-4e0a-9245-a74339473481"
+}
+
+###
+GET https://potential-v2.vercel.app/products/find
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NGNmYzJkYi0xZWFlLTRiMTAtOWI0MC0yZmJmZWJlNzRlMjQiLCJ1c2VybmFtZSI6ImFobWVkIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY3NzcwMzM3LCJleHAiOjE3Njc4NTY3Mzd9.06TMs3VrDSc94f0qBRu7hUiz7m9VM1_ncLTzvhXgZI8
+
+###
+GET https://potential-v2.vercel.app/categories/cat-id
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NGNmYzJkYi0xZWFlLTRiMTAtOWI0MC0yZmJmZWJlNzRlMjQiLCJ1c2VybmFtZSI6ImFobWVkIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzY3NzcwMzM3LCJleHAiOjE3Njc4NTY3Mzd9.06TMs3VrDSc94f0qBRu7hUiz7m9VM1_ncLTzvhXgZI8
+
+###
+GET http://localhost:3000/auth/me
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZWU0Y2IzMi01YjEwLTRlNDMtOWQwOS03ODFiNzRhODE5ZTciLCJ1c2VybmFtZSI6ImFobWVkMiIsImlhdCI6MTc2NjgwODkwOSwiZXhwIjoxNzY2ODk1MzA5fQ.cPqg5kqz0wuUjEcrTs3onDxklro2YRB2WQTMlMtxT4I
+
+###
+GET http://localhost:3000/cart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZWU0Y2IzMi01YjEwLTRlNDMtOWQwOS03ODFiNzRhODE5ZTciLCJ1c2VybmFtZSI6ImFobWVkMiIsImlhdCI6MTc2NjgwODkwOSwiZXhwIjoxNzY2ODk1MzA5fQ.cPqg5kqz0wuUjEcrTs3onDxklro2YRB2WQTMlMtxT4I
+
+###
+GET http://localhost:3000/cart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGRlMGYzYi1hYTNiLTRmY2EtOTYyOC1hOTczOTY0MmZkZjMiLCJ1c2VybmFtZSI6ImN1c3RvbWVyIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzY3MzIyMzMxLCJleHAiOjE3Njc0MDg3MzF9.IwENFvtJSLOU1c0fNeB0kiVODaJOlZf8E5bOWXVWvBk
+
+###
+PATCH http://localhost:3000/cart/update
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGRlMGYzYi1hYTNiLTRmY2EtOTYyOC1hOTczOTY0MmZkZjMiLCJ1c2VybmFtZSI6ImN1c3RvbWVyIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzY3MzIyMzk4LCJleHAiOjE3Njc0MDg3OTh9.y15LApLMq0fHNUS1Tp1aBLPzSRd3moqS4p0uCDaJPyw
+content-type: application/json
+
+{
+  "productId": "2c33f46d-c412-4e0a-9245-a74339473481",
+  "quantity": 1
+}
+
+###
+POST http://localhost:3000/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGRlMGYzYi1hYTNiLTRmY2EtOTYyOC1hOTczOTY0MmZkZjMiLCJ1c2VybmFtZSI6ImN1c3RvbWVyIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzY3MzIyMzk4LCJleHAiOjE3Njc0MDg3OTh9.y15LApLMq0fHNUS1Tp1aBLPzSRd3moqS4p0uCDaJPyw
+content-type: application/json
+
+{
+  "shippingAddress": "123 Main St, City, Country",
+  "items": [
+    {
+      "productId": "2c33f46d-c412-4e0a-9245-a74339473481",
+      "quantity": 2
+    }
+  ]
+}
+
+###
+GET http://localhost:3000/orders/stats
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOGRlMGYzYi1hYTNiLTRmY2EtOTYyOC1hOTczOTY0MmZkZjMiLCJ1c2VybmFtZSI6ImN1c3RvbWVyIiwicm9sZSI6IkNVU1RPTUVSIiwiaWF0IjoxNzY3MzIyMzk4LCJleHAiOjE3Njc0MDg3OTh9.y15LApLMq0fHNUS1Tp1aBLPzSRd3moqS4p0uCDaJPyw
